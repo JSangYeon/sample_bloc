@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'counter_bloc.dart';
 
 class CounterScreen extends StatefulWidget {
-  const CounterScreen({Key? key}) : super(key: key);
+  const CounterScreen({super.key});
 
   @override
-  CounterScreenState createState() => CounterScreenState();
+  _CounterScreenState createState() => _CounterScreenState();
 }
 
-class CounterScreenState extends State<CounterScreen> {
+class _CounterScreenState extends State<CounterScreen> {
   final _counterBloc = CounterBloc();
 
   @override
@@ -21,26 +21,45 @@ class CounterScreenState extends State<CounterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Counter'),
+        title: const Text('Counter App'),
       ),
       body: Center(
-        child: StreamBuilder<int>(
-          stream: _counterBloc.counterState.stream,
-          initialData: _counterBloc._counter,
-          builder: (context, snapshot) {
-            return Text(
-              '${snapshot.data}',
-              style: Theme.of(context).textTheme.headline4,
-            );
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            StreamBuilder<int>(
+              stream: _counterBloc.counterStream,
+              initialData: _counterBloc.counter,
+              builder: (context, snapshot) {
+                return Text(
+                  '${snapshot.data}',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              },
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FloatingActionButton(
+                  onPressed: _counterBloc.increment,
+                  tooltip: 'Increment',
+                  child: const Icon(Icons.add),
+                ),
+                const SizedBox(width: 16.0),
+                FloatingActionButton(
+                  onPressed: _counterBloc.decrement,
+                  tooltip: 'Decrement',
+                  child: const Icon(Icons.remove),
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _counterBloc.increment();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

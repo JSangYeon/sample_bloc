@@ -1,38 +1,25 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 
-part 'event.dart';
-part 'state.dart';
 
 class CounterBloc {
   int _counter = 0;
+  int get counter => _counter;
 
-  final _counterStateController = StreamController<CounterState>();
-  StreamSink<CounterState> get _inCounterState => _counterStateController.sink;
-  Stream<CounterState> get counterState => _counterStateController.stream;
+  final _counterController = StreamController<int>();
+  Stream<int> get counterStream => _counterController.stream;
 
-  final _counterEventController = StreamController<CounterEvent>();
-  StreamSink<CounterEvent> get counterEventSink => _counterEventController.sink;
-
-
-
-
-  CounterBloc() {
-    _counterEventController.stream.listen(_mapEventToState);
+  void increment() {
+    _counter++;
+    _counterController.sink.add(_counter);
   }
 
-  void _mapEventToState(CounterEvent event) {
-    if (event is IncrementEvent) {
-      _counter++;
-    } else if (event is DecrementEvent) {
-      _counter--;
-    }
-    _inCounterState.add(CounterState(_counter));
+  void decrement() {
+    _counter--;
+    _counterController.sink.add(_counter);
   }
 
   void dispose() {
-    _counterStateController.close();
-    _counterEventController.close();
+    _counterController.close();
   }
 }
