@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sample_bloc/picker_screen.dart';
 import 'dart:async';
-
 import 'counter_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'counter_bloc.dart';
 
 
 void main() {
@@ -16,11 +20,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
 
+      theme: ThemeData(
+        // appBarTheme: const AppBarTheme(
+        //   systemOverlayStyle: SystemUiOverlayStyle.dark,
+        // ),
         primarySwatch: Colors.blue,
       ),
-      home: const CounterScreen(),
+      // home: const PickerScreen()
+      home: BlocProvider(//Bloc 패턴을 사용하는 하위 컴포넌트 생성할 때, BlocProvider로 생성
+        create: (_) => CounterBloc(),
+        child: const SafeArea(child: CounterScreen()),
+      ),
     );
   }
 }
